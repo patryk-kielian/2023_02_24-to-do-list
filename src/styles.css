@@ -4,6 +4,7 @@
   --white: #fff;
   --white50: #ffffff80;
   --white75: #ffffffbb;
+  --orange: #f79c51;
 }
 
 /* Reset styles */
@@ -84,6 +85,17 @@ html {
   margin-left: 20px;
 }
 
+.control-add,
+.control-display {
+  transition: all 300ms ease-in-out;
+}
+
+.control-add:hover,
+.control-display:hover,
+.control-display.selected:hover {
+  background-color: var(--orange);
+}
+
 .control-display.selected {
   color: var(--white);
   background-color: var(--lightblue);
@@ -93,6 +105,21 @@ html {
   border-radius: 20px;
   padding: 20px 30px;
   background-color: var(--white75);
+}
+
+.content-group table {
+  width: 100%;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.content-group th {
+  font-size: 1.5rem;
+  font-weight: 400;
+  min-width: 100px;
+}
+.content-group td {
+  padding: 10px;
 }
 
 .copyright {
