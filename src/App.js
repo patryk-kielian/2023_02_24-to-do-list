@@ -13,6 +13,7 @@ export default function App() {
       fulfillment: "30%",
     },
   ]);
+  const [showForm, setShowForm] = useState(false);
 
   const onSubmit = function (event) {
     event.preventDefault();
@@ -43,6 +44,11 @@ export default function App() {
         fulfillment: `${event.target.fulfillment.value}%`,
       },
     ]);
+    setShowForm(!showForm);
+  };
+
+  const toggleFormVisibility = function () {
+    setShowForm(!showForm);
   };
 
   return (
@@ -50,8 +56,15 @@ export default function App() {
       <div className="container">
         <h1 className="title">React To-Do List</h1>
         <div className="controls-group">
-          <button className="control-add">Add a new to-do</button>
-          <Form onSubmit={onSubmit} />
+          <button className="control-add" onClick={toggleFormVisibility}>
+            Add a new to-do
+          </button>
+          {showForm && (
+            <Form
+              onSubmit={onSubmit}
+              toggleFormVisibility={toggleFormVisibility}
+            />
+          )}
           <div>
             <button className="control-display selected">All</button>
             <button className="control-display">To-Do</button>
