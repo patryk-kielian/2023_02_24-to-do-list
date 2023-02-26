@@ -1,4 +1,4 @@
-export default function Form({ onSubmit, toggleFormVisibility }) {
+export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
   return (
     <form onSubmit={onSubmit}>
       <h2 className="form-title">Add a new to-do:</h2>
@@ -9,6 +9,7 @@ export default function Form({ onSubmit, toggleFormVisibility }) {
             <input
               type="text"
               id="name"
+              defaultValue={selectedTodo.name}
               placeholder="name for the task you’re going to do"
             ></input>
           </div>

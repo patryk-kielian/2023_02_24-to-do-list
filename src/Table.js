@@ -1,4 +1,4 @@
-export default function Table({ todos }) {
+export default function Table({ todos, handleDelete, handleEdit }) {
   return (
     <div className="content-group">
       <table>
@@ -14,7 +14,7 @@ export default function Table({ todos }) {
           </tr>
         </thead>
         <tbody>
-          {todos.map((todo) => (
+          {todos.map((todo, index) => (
             <tr key={todo.name}>
               <td>{todo.name}</td>
               <td>{todo.description}</td>
@@ -22,7 +22,24 @@ export default function Table({ todos }) {
               <td>{todo.date}</td>
               <td>{todo.priority}</td>
               <td>{todo.fulfillment}</td>
-              <td>{todo.status}</td>
+              <td>
+                <button className="btn-table">
+                  <span
+                    className="material-symbols-outlined"
+                    onClick={() => handleEdit(index)}
+                  >
+                    edit_note
+                  </span>
+                </button>
+                <button className="btn-table">
+                  <span
+                    className="material-symbols-outlined"
+                    onClick={() => handleDelete(index)}
+                  >
+                    delete
+                  </span>
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
