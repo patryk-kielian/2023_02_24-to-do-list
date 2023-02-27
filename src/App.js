@@ -1,23 +1,20 @@
 import Form from "./Form";
 import Table from "./Table";
+import Popup from "./Popup";
 import { useState } from "react";
 
+import { PLACEHOLDER_TODOS } from "./config";
+
 export default function App() {
-  const [todos, setTodos] = useState([
-    {
-      name: "Learn React",
-      description: "Managing State, Escape Hatches, Effects",
-      category: "Programming",
-      date: "-",
-      priority: "High",
-      fulfillment: "30%",
-    },
-  ]);
+  const [todos, setTodos] = useState(PLACEHOLDER_TODOS);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("Something went wrong.");
 
   const onSubmit = function (event) {
     event.preventDefault();
+    console.log(selectedTodo);
     const dateInput = event.target.date.value;
     let formattedDate = "-";
     if (dateInput) {
@@ -31,23 +28,45 @@ export default function App() {
       };
       formattedDate = date.toLocaleDateString(undefined, options);
     }
-    setTodos([
-      ...todos,
-      {
-        name: event.target.name.value,
-        description: event.target.description.value,
-        category: event.target.category.value,
-        date: formattedDate.replace(", ", "\n"),
-        priority: event.target.priority.value,
-        fulfillment: `${event.target.fulfillment.value}%`,
-      },
-    ]);
+
+    const newTodo = {
+      name: event.target.name.value,
+      description: event.target.description.value,
+      category: event.target.category.value,
+      date: formattedDate.replace(", ", " "),
+      priority: event.target.priority.value,
+      fulfillment: `${event.target.fulfillment.value}%`,
+    };
+
+    if (selectedTodo) {
+      let editedTodos = [...todos];
+      let index = editedTodos.findIndex((todo) => todo.name === newTodo.name);
+      editedTodos[index] = newTodo;
+      setTodos(editedTodos);
+    } else {
+      setTodos([...todos, newTodo]);
+    }
+
     setShowForm(!showForm);
   };
 
-  const toggleFormVisibility = function (todo = null) {
+  const onSubmitEdit = function (event) {
+    event.preventDefault();
+    console.log(event);
+  };
+
+  /**
+   * Opens or closes the form. If called to edit an existing form, it will set a selectedTodo to fill in the fields with existing values
+   * @param {*} event
+   * @param {*} todo
+   */
+  const toggleFormVisibility = function (event, todo = null) {
     setSelectedTodo(todo);
     setShowForm(!showForm);
+  };
+
+  const togglePopupVisibility = function () {
+    setShowPopup(!showPopup);
   };
 
   const handleDelete = function (index) {
@@ -58,9 +77,8 @@ export default function App() {
 
   const handleEdit = function (index) {
     const todo = todos[index];
-    toggleFormVisibility(todo);
+    toggleFormVisibility(event, todo);
   };
-
   return (
     <>
       <div className="container">
@@ -89,6 +107,13 @@ export default function App() {
           selectedTodo={selectedTodo}
         />
       )}
+      {showPopup && (
+        <Popup
+          togglePopupVisibility={togglePopupVisibility}
+          message={popupMessage}
+        />
+      )}
+      <button onClick={togglePopupVisibility}></button>
     </>
   );
 }

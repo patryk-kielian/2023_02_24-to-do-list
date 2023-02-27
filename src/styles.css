@@ -277,6 +277,24 @@ form input[type="range"]::-moz-range-thumb {
 .btn-table span {
   vertical-align: middle;
 }
+
+.popup-overlay {
+  background-color: var(--white50);
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100svh;
+  z-index: 200;
+}
+
+.popup-container {
+  margin: auto;
+}
+
 .copyright {
   width: 1200px;
   margin: 50px auto;

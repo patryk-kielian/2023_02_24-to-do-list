@@ -1,5 +1,18 @@
 export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
+  function formatDateISO(dateString) {
+    const [date, time] = dateString.split(" ");
+    const [day, month, year] = date.split(".");
+    const [hour, minute] = time.split(":");
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+  }
+
+  const dateISO =
+    selectedTodo && selectedTodo.date !== "-"
+      ? formatDateISO(selectedTodo.date)
+      : null;
+
   return (
+    // <form onSubmit={selectedTodo ? onSubmitEdit : onSubmit}>
     <form onSubmit={onSubmit}>
       <h2 className="form-title">Add a new to-do:</h2>
       <div className="form-fields">
@@ -9,7 +22,7 @@ export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
             <input
               type="text"
               id="name"
-              defaultValue={selectedTodo.name}
+              defaultValue={selectedTodo && selectedTodo.name}
               placeholder="name for the task you’re going to do"
             ></input>
           </div>
@@ -17,6 +30,7 @@ export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
             <label htmlFor="description">Description:</label>
             <textarea
               id="description"
+              defaultValue={selectedTodo && selectedTodo.description}
               placeholder="a short description of the task - can be omitted"
             ></textarea>
           </div>
@@ -25,19 +39,27 @@ export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
             <input
               type="text"
               id="category"
+              defaultValue={selectedTodo && selectedTodo.category}
               placeholder="e.g. household, school, work"
             ></input>
           </div>
           <div className="form-fields-row">
             <label htmlFor="date">Date:</label>
-            <input type="datetime-local" id="date"></input>
+            <input
+              type="datetime-local"
+              id="date"
+              defaultValue={dateISO}
+            ></input>
           </div>
         </div>
         <div className="form-fields-column">
           <div>
             <div className="form-fields-row">
               <label htmlFor="priority">Priority:</label>
-              <select id="priority">
+              <select
+                id="priority"
+                defaultValue={selectedTodo && selectedTodo.priority}
+              >
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
@@ -51,6 +73,9 @@ export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
                 name="vol"
                 min="0"
                 max="100"
+                defaultValue={
+                  selectedTodo && selectedTodo.fulfillment.slice(0, -1)
+                }
               ></input>
             </div>
           </div>
