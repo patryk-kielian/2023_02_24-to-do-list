@@ -1,19 +1,25 @@
-export default function Popup({ togglePopupVisibility, message, popupMethod }) {
-  if (popupMethod)
+export default function Popup({ togglePopupVisibility, popup, promise }) {
+  if (popup.display)
     return (
       <div className="popup-overlay">
         <div className="popup-container">
-          <h4 className="popup-message">{message}</h4>
+          <h4 className="popup-message">{popup.message}</h4>
           <button
             className="popup-button form-button"
-            onClick={togglePopupVisibility}
+            onClick={() => {
+              togglePopupVisibility();
+              promise.resolve();
+            }}
           >
             OK
           </button>
-          {popupMethod === "prompt" ? (
+          {popup.method === "prompt" ? (
             <button
               className="popup-button form-button"
-              onClick={togglePopupVisibility}
+              onClick={() => {
+                togglePopupVisibility();
+                promise.reject();
+              }}
             >
               Cancel
             </button>

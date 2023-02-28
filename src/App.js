@@ -9,8 +9,13 @@ export default function App() {
   const [todos, setTodos] = useState(PLACEHOLDER_TODOS);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("Something went wrong.");
+  const [popup, setPopup] = useState({
+    display: false,
+    message: "Something went wrong.",
+    method: "warning",
+    decision: false,
+  });
+  const [promise, setPromise] = useState(null);
 
   const onSubmit = function (event) {
     event.preventDefault();
@@ -64,17 +69,62 @@ export default function App() {
   };
 
   const togglePopupVisibility = function (message = "Something went wrong!") {
-    setPopupMessage(message);
-    showPopup ? setShowPopup(false) : setShowPopup(!showPopup);
+    setPopup((prevPopup) => ({
+      ...prevPopup,
+      message: message,
+      display: !prevPopup.display,
+    }));
   };
 
   const handleDelete = function (index) {
-    setPopupMessage("Are you sure you want to delete this to-do?");
-    setShowPopup("prompt");
-    let newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
+    setPopup((prevPopup) => ({
+      ...prevPopup,
+      message: "Are you sure you want to delete this to-do?",
+      display: true,
+      decision: false,
+      method: "prompt",
+    }));
+
+    return new Promise((resolveFn, rejectFn) => {
+      setPromise({
+        resolve: () => {
+          resolveFn();
+        },
+        reject: () => {
+          rejectFn();
+        },
+      });
+    })
+      .then(() => {
+        let newTodos = [...todos];
+        newTodos.splice(index, 1);
+        setTodos(newTodos);
+      })
+      .catch(() => {
+        console.log("User cancelled the delete operation.");
+      });
   };
+
+  // const handleDelete = function (index) {
+  //   setPopup((prevPopup) => ({
+  //     ...prevPopup,
+  //     message: "Are you sure you want to delete this to-do?",
+  //     display: true,
+  //     decision: false,
+  //     method: "prompt",
+  //   }));
+
+  //   return new Promise((resolve, reject) => {
+  //     if (popup.decision) {
+  //       let newTodos = [...todos];
+  //       newTodos.splice(index, 1);
+  //       setTodos(newTodos);
+  //       resolve();
+  //     } else {
+  //       reject();
+  //     }
+  //   });
+  // };
 
   const handleEdit = function (index) {
     const todo = todos[index];
@@ -88,7 +138,6 @@ export default function App() {
       index === i ? { ...todo, fulfillment: editedFulfillment } : todo
     );
     setTodos(editedTodos);
-    console.log(todos[index]);
   };
   return (
     <>
@@ -123,8 +172,8 @@ export default function App() {
 
       <Popup
         togglePopupVisibility={togglePopupVisibility}
-        message={popupMessage}
-        popupMethod={showPopup}
+        popup={popup}
+        promise={promise}
       />
     </>
   );
