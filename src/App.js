@@ -14,7 +14,10 @@ export default function App() {
 
   const onSubmit = function (event) {
     event.preventDefault();
-    console.log(selectedTodo);
+    if (!event.target.name.value) {
+      togglePopupVisibility(`Field "Name" cannot be empty!`);
+      return;
+    }
     const dateInput = event.target.date.value;
     let formattedDate = "-";
     if (dateInput) {
@@ -50,11 +53,6 @@ export default function App() {
     setShowForm(!showForm);
   };
 
-  const onSubmitEdit = function (event) {
-    event.preventDefault();
-    console.log(event);
-  };
-
   /**
    * Opens or closes the form. If called to edit an existing form, it will set a selectedTodo to fill in the fields with existing values
    * @param {*} event
@@ -65,11 +63,14 @@ export default function App() {
     setShowForm(!showForm);
   };
 
-  const togglePopupVisibility = function () {
-    setShowPopup(!showPopup);
+  const togglePopupVisibility = function (message = "Something went wrong!") {
+    setPopupMessage(message);
+    showPopup ? setShowPopup(false) : setShowPopup(!showPopup);
   };
 
   const handleDelete = function (index) {
+    setPopupMessage("Are you sure you want to delete this to-do?");
+    setShowPopup("prompt");
     let newTodos = [...todos];
     newTodos.splice(index, 1);
     setTodos(newTodos);
@@ -78,6 +79,16 @@ export default function App() {
   const handleEdit = function (index) {
     const todo = todos[index];
     toggleFormVisibility(event, todo);
+  };
+
+  const handleCheckbox = function (index) {
+    const editedFulfillment =
+      todos[index].fulfillment === "100%" ? "0%" : "100%";
+    const editedTodos = todos.map((todo, i) =>
+      index === i ? { ...todo, fulfillment: editedFulfillment } : todo
+    );
+    setTodos(editedTodos);
+    console.log(todos[index]);
   };
   return (
     <>
@@ -97,6 +108,7 @@ export default function App() {
           todos={todos}
           handleDelete={handleDelete}
           handleEdit={handleEdit}
+          handleCheckbox={handleCheckbox}
         />
       </div>
       <div className="copyright">Patryk Kielian © 2023 all rights reserved</div>
@@ -105,15 +117,15 @@ export default function App() {
           onSubmit={onSubmit}
           toggleFormVisibility={toggleFormVisibility}
           selectedTodo={selectedTodo}
-        />
-      )}
-      {showPopup && (
-        <Popup
           togglePopupVisibility={togglePopupVisibility}
-          message={popupMessage}
         />
       )}
-      <button onClick={togglePopupVisibility}></button>
+
+      <Popup
+        togglePopupVisibility={togglePopupVisibility}
+        message={popupMessage}
+        popupMethod={showPopup}
+      />
     </>
   );
 }

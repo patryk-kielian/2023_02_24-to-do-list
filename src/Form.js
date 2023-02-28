@@ -12,7 +12,6 @@ export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
       : null;
 
   return (
-    // <form onSubmit={selectedTodo ? onSubmitEdit : onSubmit}>
     <form onSubmit={onSubmit}>
       <h2 className="form-title">Add a new to-do:</h2>
       <div className="form-fields">
@@ -74,7 +73,7 @@ export default function Form({ onSubmit, toggleFormVisibility, selectedTodo }) {
                 min="0"
                 max="100"
                 defaultValue={
-                  selectedTodo && selectedTodo.fulfillment.slice(0, -1)
+                  selectedTodo ? selectedTodo.fulfillment.slice(0, -1) : 0
                 }
               ></input>
             </div>
