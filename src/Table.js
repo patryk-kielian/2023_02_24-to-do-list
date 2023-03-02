@@ -20,39 +20,46 @@ export default function Table({
           </tr>
         </thead>
         <tbody>
-          {todos.map((todo, index) => (
-            <tr key={todo.name}>
-              <td>
-                <button
-                  className="btn-checkbox"
-                  onClick={() => handleCheckbox(index)}
-                >
-                  <span className="material-symbols-outlined">
-                    {todo.fulfillment === "100%"
-                      ? "check_box"
-                      : "check_box_outline_blank"}
-                  </span>
-                </button>
-              </td>
-              <td>{todo.name}</td>
-              <td>{todo.description}</td>
-              <td>{todo.category}</td>
-              <td>{todo.date}</td>
-              <td>{todo.priority}</td>
-              <td>{todo.fulfillment}</td>
-              <td>
-                <button className="btn-table" onClick={() => handleEdit(index)}>
-                  <span className="material-symbols-outlined">edit_note</span>
-                </button>
-                <button
-                  className="btn-table"
-                  onClick={() => handleDelete(index)}
-                >
-                  <span className="material-symbols-outlined">delete</span>
-                </button>
-              </td>
-            </tr>
-          ))}
+          {todos
+            ? todos.map((todo, index) => (
+                <tr key={todo.name}>
+                  <td>
+                    <button
+                      className="btn-checkbox"
+                      onClick={() => handleCheckbox(index)}
+                    >
+                      <span className="material-symbols-outlined">
+                        {todo.fulfillment === "100%"
+                          ? "check_box"
+                          : "check_box_outline_blank"}
+                      </span>
+                    </button>
+                  </td>
+                  <td>{todo.name}</td>
+                  <td>{todo.description}</td>
+                  <td>{todo.category}</td>
+                  <td>{todo.date}</td>
+                  <td>{todo.priority}</td>
+                  <td>{todo.fulfillment}</td>
+                  <td>
+                    <button
+                      className="btn-table"
+                      onClick={() => handleEdit(index)}
+                    >
+                      <span className="material-symbols-outlined">
+                        edit_note
+                      </span>
+                    </button>
+                    <button
+                      className="btn-table"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <span className="material-symbols-outlined">delete</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            : null}
         </tbody>
       </table>
     </div>

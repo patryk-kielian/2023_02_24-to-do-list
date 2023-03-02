@@ -1,21 +1,36 @@
+import { useState, useEffect } from "react";
+
 import Form from "./Form";
 import Table from "./Table";
 import Popup from "./Popup";
-import { useState } from "react";
+import Copyright from "./Copyright";
 
 import { PLACEHOLDER_TODOS } from "./config";
 
 export default function App() {
-  const [todos, setTodos] = useState(PLACEHOLDER_TODOS);
+  const [todos, setTodos] = useState();
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [popup, setPopup] = useState({
     display: false,
     message: "Something went wrong.",
     method: "warning",
-    decision: false,
   });
   const [promise, setPromise] = useState(null);
+
+  useEffect(() => {
+    // No dependencies, runs only on load/reload
+    // If localStorage doesn't have todos (app opened for the first time), set it to placeholder todos
+    if (!localStorage.getItem("todos"))
+      localStorage.setItem("todos", JSON.stringify(PLACEHOLDER_TODOS));
+    // In any case, set todos in the app to the ones saved in local storage (now always unempty)
+    setTodos(JSON.parse(localStorage.getItem("todos")));
+  }, []);
+
+  useEffect(() => {
+    // Save updated todos to local storage
+    if (todos) localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const onSubmit = function (event) {
     event.preventDefault();
@@ -160,7 +175,7 @@ export default function App() {
           handleCheckbox={handleCheckbox}
         />
       </div>
-      <div className="copyright">Patryk Kielian © 2023 all rights reserved</div>
+      <Copyright />
       {showForm && (
         <Form
           onSubmit={onSubmit}
