@@ -4,8 +4,8 @@
   "description": "To-Do List made with React",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build --dist-dir ./docs"
+    "start": "parcel --public-url ./",
+    "build": "parcel build --dist-dir ./docs --public-url ./"
   },
   "author": "Patryk Kielian",
   "license": "ISC",
